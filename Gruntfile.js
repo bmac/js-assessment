@@ -1,18 +1,20 @@
+var fs = require('fs'),
+    exec = require('child_process').exec;
+
+
 module.exports = function(grunt) {
 
-var previous_force_state = grunt.option('force');
+  // ugly hack
+  grunt.registerTask('outputMocha',function(set){
+    var done = this.async();
+    exec('./node_modules/mocha/bin/mocha -R json tests/runner.js',function(err,stdout,stderr){
+      fs.writeFile('out.json', stdout, function() {
+        done();
+      });
+    });
+  });
 
-grunt.registerTask('force',function(set){
-    if (set === 'on') {
-        grunt.option('force',true);
-    }
-    else if (set === 'off') {
-        grunt.option('force',false);
-    }
-    else if (set === 'restore') {
-        grunt.option('force',previous_force_state);
-    }
-});
+
 
   grunt.initConfig({
     jshint: {
@@ -39,9 +41,7 @@ grunt.registerTask('force',function(set){
     mochaTest: {
       test: {
         options: {
-          force: true,
-          reporter: 'json',
-          captureFile: 'out.json'
+          reporter: 'spec'
         },
         src: ['tests/runner.js']
       }
@@ -56,11 +56,12 @@ grunt.registerTask('force',function(set){
     server({ port : 4444, dev : true });
   });
 
+  grunt.loadNpmTasks('grunt-simple-mocha');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-mocha-test');
   grunt.loadNpmTasks('grunt-training-reporter');
 
-  grunt.registerTask('default', [ 'jshint', 'force:on', 'mochaTest', 'force:restore', 'reporter' ]);
+  grunt.registerTask('default', [ 'jshint', 'outputMocha', 'reporter', 'mochaTest' ]);
   grunt.registerTask('develop', [ 'server', 'watch' ]);
 };
