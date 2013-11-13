@@ -39,8 +39,14 @@ grunt.registerTask('force',function(set){
     mochaTest: {
       test: {
         options: {
-          force: true,
+          reporter: 'spec'
+        },
+        src: ['tests/runner.js']
+      },
+      outPutFile: {
+        options: {
           reporter: 'json',
+          quiet: true,
           captureFile: 'out.json'
         },
         src: ['tests/runner.js']
