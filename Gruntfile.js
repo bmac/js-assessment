@@ -47,6 +47,9 @@ module.exports = function(grunt) {
       }
     },
     reporter: {
+      options: {
+        pattern: 'app/*.js'
+      },
       all: {}
     }
   });
@@ -56,7 +59,6 @@ module.exports = function(grunt) {
     server({ port : 4444, dev : true });
   });
 
-  grunt.loadNpmTasks('grunt-simple-mocha');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-mocha-test');
