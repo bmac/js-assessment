@@ -48,7 +48,7 @@ module.exports = function(grunt) {
     },
     reporter: {
       options: {
-        pattern: 'app/*.js'
+        uploadFiles: 'app/*.js'
       },
       all: {}
     }
